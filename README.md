@@ -1,14 +1,9 @@
-#Static Analysis 
+#Static Analysis
 
 Summer 2019 Update/Use:
 
-<<<<<<< HEAD
-The use of these files relies on a directory structure that can be found in toolchain.txt, which should be read after this.
+Please keep this folder in the top level of automated-assessment.
 
-Additionally, `python3`, `pip3`, and the supporting modules must be installed. The required modules can be found in `requirements.txt`. All modules in this file can be installed by running `pip3 install -r requirements.txt`. 
-
-If additional modules are required later on, it is recommended to set up a virtual environment, installing `virtualenv`, so that `requirements.txt` can be updated with only modules specific to this project.
-=======
 The use of these files relies on the following directory structure for each module:
 
 /*MODULE*
@@ -23,7 +18,6 @@ The use of these files relies on the following directory structure for each modu
   * /pngs
 + /json_files_by_studio
 + metadata-*MODULE*.csv
->>>>>>> 9b9661d0d3cc0d829a12f6ce119b31483cfab658
 
 
 run.py: python3 run.py (path to CSV file of commands, each referencing a Scratch Studio)
@@ -33,7 +27,7 @@ run.py: python3 run.py (path to CSV file of commands, each referencing a Scratch
 * Grades each project in Studio using grade.js
 
 plotGrade.py: python3 plotGrade.py (module directory)
-* Manipulates the data outputted by run.py and creates graphs. 
+* Manipulates the data outputted by run.py and creates graphs.
 * Current (and very much changing) graphs include:
   * Per grade:
     * Distribution, classroom completion per requirement, and classroom completion totals
@@ -62,23 +56,23 @@ Created by Zack Crenshaw, in part based on code from Max White and Jean Salac (a
 batch.py: python3 batch.py (text file with commands)
     Will run a batch of calls of 'run.py', given a text or CSV file of arguments
     Each line of text file:
-    	StudioURL/Studio ID, module folder, grade level, verbose (optional) 
+    	StudioURL/Studio ID, module folder, grade level, verbose (optional)
 
 run.py: python3 run.py (studio URL) (module folder) (grade level) [--verbose]
-    scrapes the data from the given studio, and grades the projects, organized by grade level. 
-    
+    scrapes the data from the given studio, and grades the projects, organized by grade level.
+
     Input a valid link to scrape from the web
     Input just the studio ID to only grade existing JSON files
     Optional verbose tag outputs the grades to the console.
-    
+
     Uses webScrape.py to scrape web data
         Uses scratchAPI.py to get the JSON files
     Uses grade.js to grade the scripts
     	Any errors in grading a project will be printed to the console, regardless of the verbose tag.
-    
+
 mergeCSVs.py: python3 mergeCSV (folder containing CSVs) (output CSV file)
     Appends data from CSVs into new CSV
-    
+
 countCSV.py: python3 countCSV.py (input CSV) [output CSV]
     Counts each field of the input CSV, and saves the count to a single-line output CSV
     If no explicit output, will output to file with same name with "-counted" appended
@@ -100,7 +94,7 @@ These files thus have the structure: studioURL,module,grade level
 
 NOTE: See toolchain.txt for an example of how to use this toolchain. Below is a description of each step:
 
-NOTE: Metadata and collected data is contained in the Dropbox folder. 
+NOTE: Metadata and collected data is contained in the Dropbox folder.
 
 Data collection and processing procedure:
 
@@ -111,13 +105,3 @@ CSV files created by run.py will be named STUDIOID.csv (each studio has its own 
 The csv files in "aggregated" with grade levels (single digit numbers) are all the csv files for a given grade level appended to each other
 Each of the CSVs in "counted" is this grade-wide data with some counting of the data, condensed to single line
 aggregated.csv (and variants thereof) is all the counted csvs (or some subset) appended together. It is from this csv that the graphs (pdfs in the top level of a module) are based.
-
-
-
-    
-
-    
-
-
-
-    
