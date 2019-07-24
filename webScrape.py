@@ -1,14 +1,18 @@
-#Web scraping tool for static analysis
-#Zack Crenshaw
-#Adapted from code by Jean Salac
+# Web scraping tool for static analysis
+# Zack Crenshaw
+# Adapted from code by Jean Salac
+# Modified by Marco Anaya to retrieve name of parent project when 
+# it was remixed by a Scratch Encore account
 
-#COMMAND LINE: python3 webScrape.py (studio URL) (file path)
+# COMMAND LINE: python3 webScrape.py (studio URL) (file path)
 
 import sys
 import requests
 import scratchAPI as sa
 import os
 from bs4 import BeautifulSoup
+import json
+
 
 def main():
 
@@ -37,26 +41,40 @@ def main():
             # Find the span object with owner attribute
             span_string = str(project.find("span", "owner"))
 
-            # Pull out scratch username
-            scratch_username = span_string.split(">")[2]
-            scratch_username = scratch_username[0:len(scratch_username) - 3]
-            if scratch_username == "ScratchEncore": #ignore scratch encore projects
-                continue
-
-            # Get project ID
+             # Get project ID
             proj_id = project.get('data-id')
 
+            # Pull scratch username
+            scratch_username = span_string.split(">")[2]
+            scratch_username = scratch_username[0:len(scratch_username) - 3]
+
+            # if the user is an account used by Scratch Encore for data cleaning,
+            # find parent account's username
+            if "encoresa" in scratch_username.lower():
+                # getting the parent project, where we remixed it from
+                project_r = requests.get(sa.create_proj_info_URL(proj_id))
+                project_json = json.loads(project_r.content)
+                parent_id = str(project_json['remix']['parent'])
+                # finding the name of the user
+                parent_r = requests.get(sa.create_proj_info_URL(parent_id))
+                parent_json = json.loads(parent_r.content)
+                scratch_username = parent_json['author']['username']
+                
+            if scratch_username == "ScratchEncore": #ignore scratch encore projects
+                continue
+           
             # Read json file from URL. Convert Scratch URL to Scratch API URL, then read file.
             apiURL = sa.create_API_URL(proj_id)
             json_stream = requests.get(apiURL, allow_redirects=True)
+
             user_directory = module + "/json_files_by_studio/" + studioID+ "/"
-            json_filename = user_directory + proj_id + ".json"
+            json_filename = user_directory + scratch_username + ".json"
             try:
                 os.makedirs(user_directory)
             except:
                 pass
-            with open(json_filename, 'wb') as json:
-                json.write(json_stream.content)
+            with open(json_filename, 'wb') as j:
+                j.write(json_stream.content)
 
         pageNum += 1
         studio_api_url = sa.studio_to_API(studioURL, pageNum)
