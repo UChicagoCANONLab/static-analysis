@@ -1,0 +1,24 @@
+ID,Error grading project,Bee starts at the beginning of the track.,Bee has an event block for the down arrow.,Bee changes costume on the down arrow.,Bee wait block on down arrow.,Bee has an event block for the space bar.,Bee loops on the space bar event.,Bee moves within the loop.,Bee changes costume within the loop.,Bee has a wait block within the loop.,Bee reaches the finish line through animation.
+10JCL210,0,1,0,0,0,0,0,0,0,0,0
+11JCL210,0,1,1,1,1,1,1,1,1,1,1
+12JCL210,0,1,0,0,0,0,0,0,0,0,0
+13JCL210,0,1,0,0,0,1,1,1,1,1,1
+14JCL210,0,1,0,0,0,1,1,1,1,1,1
+16JCL210,0,1,1,1,1,0,0,0,0,0,0
+17JCL210,0,0,0,0,0,1,1,1,1,1,1
+18JCL210,0,1,1,1,1,1,1,1,1,1,1
+1JCL210,0,1,0,0,0,1,0,0,0,0,0
+20JCL210,0,1,0,0,0,1,1,1,1,1,1
+25JCL210,0,1,0,0,0,1,1,1,0,1,1
+26JCL210,0,1,1,1,1,1,1,1,1,1,1
+28JCL210,0,0,0,0,0,0,0,0,0,0,0
+2JCL210,0,1,1,1,1,1,1,1,1,1,1
+31JCL210,0,1,0,0,0,1,1,1,1,1,1
+32JCL210,0,1,1,1,1,1,1,1,1,1,1
+33JCL210,0,1,0,0,0,1,0,0,0,0,0
+3JCL210,0,0,0,0,0,0,0,0,0,0,0
+4JCL210,0,1,0,0,0,0,0,0,0,0,0
+5JCL210,0,0,0,0,0,1,0,0,0,0,0
+6JCL210,0,1,0,0,0,1,1,1,1,1,1
+7JCL210,0,1,1,1,1,1,1,1,1,1,1
+9JCL210,0,1,0,0,0,1,0,0,0,0,0
