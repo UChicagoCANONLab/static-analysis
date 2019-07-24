@@ -1,10 +1,10 @@
-Full Static Analysis Toolchain (Summer 2019)
+Full Static Analysis Toolchain (Summer 2019; 7/24/19)
 
 The toolchain created by Zach Crenshaw in Spring 2019 has been reduced to:
-    running run.py for a module (i.e. events-L1) to turn the raw data to CSV format
-    runniing plotGrade.py to transform the data to usable graphs
+    running run.py for a module (i.e. events-L1) to turn the raw data to CSV format and graph it
 
-Given that there exists a directory for a module with the following path structure:
+This directory structure will be created as a result of running run.py on a module:
+
 /[module]
 .    /csv
 .    .   /4     (a folder only for each grade present in the metadata CSV)
@@ -12,25 +12,21 @@ Given that there exists a directory for a module with the following path structu
 .    .   /6
 .    .   /7
 .    .   /8
-.    .   /aggregated
 .    /graphs
 .    .   /pngs
 .    /json_files_by_studio
-.   metadata-[module].csv
 
-and the required python3 modules are installed, the following example should work when typed into the command line
+If the necessary python3 modules are installed (explained in README.md), 
+and "metadata.csv" includes Scratch studio URLs for that module,
+the following command should work:
+run.py [module]
 
-run.py ./[module]/metadata-[module].csv
-plotGrade.py ./[module]
-
-If you were to do it with an actual module (i.e. copying and pasting the following lines), it would look like:
-
-run.py ./events-L1/metadata-events-L1.csv
-plotGrade.py ./events-L1
+Additionally, run.py could be ran with no arguments,
+and it will search "metadata.csv" and analyze all modules with information
 
 
 _______________________________________
-
+(Legacy)
 (6/6/19)
 
 # Link to Google Doc with this information: https://docs.google.com/document/d/1ya0KAzGwF_zaIjrqUfPIy7dB147JGXIgK_MWa0LBaR0/edit?usp=sharing
