@@ -1,10 +1,8 @@
-#Static Analysis 
+# Static Analysis 
 
-Summer 2019 Update/Use:
+Summer 2019 Update/Use (last updated on 7/24):
 
-(Last updated on 7/24)
-
-The use of these files relies on a directory structure that can be found in toolchain.txt, which should be read after this.
+This repository must be placed within the "automated-assessments" repository so that the automated graders fetched for analyzing
 
 Additionally, `python3`, `pip3`, and the supporting modules must be installed. The required modules can be found in `requirements.txt`. All modules in this file can be installed recursively by running `pip3 install -r requirements.txt`. 
 
