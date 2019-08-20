@@ -12,7 +12,7 @@ from Naked.toolshed.shell import execute_js
 
 
 def main():
-    
+
     arg = sys.argv[1] if len(sys.argv) > 1 else "*"
     verbose = sys.argv[2] if len(sys.argv) > 2 else ""
 
@@ -42,10 +42,10 @@ def main():
         elif arg in modules:
             rows_to_analyze = {modules.index(arg): arg}
             print("Running analysis for " + arg + "...")
-        else: 
+        else:
             print("Error: module name not found in metadata.csv")
             return
-        
+
         for module in rows_to_analyze.values():
             os.makedirs("./" + module + "/csv/", exist_ok=True)
 
@@ -73,16 +73,16 @@ def main():
 def grade_and_save(studioURL, teacherID, module, grade, verbose=""):
 
     studioID = studioURL.strip('htps:/cra.mieduo')  # Takes off "https://scratch.mit.edu/studios/"
-    
+
     # Get folder for a module
     mod_dir = "./" + module
 
     project = mod_dir + "/json_files_by_studio/" + studioID+"/"
     print(project)
-    
+
     # Get data from web if not found locally
     if (os.path.isdir(project) is True):
-        print("Studio " + studioID + " found locally.") 
+        print("Studio " + studioID + " found locally.")
     else:
         print("Studio " + studioID + " not found locally, scraping data from web...")
         call(["python3", "webScrape.py", studioURL, mod_dir])
