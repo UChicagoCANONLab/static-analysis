@@ -52,7 +52,7 @@ def main(project, keyword, verbose):
         if not rows_to_analyze:
             print("Error: keyword not found in any module in the metadata file.")
             return
-        
+
         for module in rows_to_analyze.values():
             csv_path = project_path + module + "/csv/"
             os.makedirs(csv_path, exist_ok=True)

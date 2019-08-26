@@ -5,7 +5,7 @@ function convert (array, filePath) {
     for (var line of array) {
         for (var i = 0; i < line.length; i++) {
             csvContent += line[i];
-            if (i < line.length - 1) csvContent += ',';
+            if (i < line.length - 1) csvContent += ';';
         }
         csvContent += '\n';
     }

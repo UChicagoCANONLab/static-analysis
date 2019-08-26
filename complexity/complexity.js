@@ -1,6 +1,9 @@
+/// Max White
+
 require('../../grading-scripts-s3/scratch3');
 var fs = require('fs');
 var arrayToCSV = require('./array-to-csv');
+var Papa = require('papaparse');
 
 module.exports = class {
 
@@ -37,31 +40,34 @@ module.exports = class {
 
         /// Calculate minimum lDistance for each script and sum them up.
         var distanceSum = 0;
-        for (var sprite of project.sprites) {
-            for (var script of sprite.scripts.filter(
-                script => script.blocks[0].opcode.includes('event_when') && script.blocks.length > 1)) {
+        for (
+            var script
+            of
+            project.scripts.filter(script => script.blocks[0].opcode.includes('event_when') && script.blocks.length > 1)
+        ) {
+            var allScripts = [];
+            allScripts.push(script);
+            allScripts = allScripts.concat(script.allSubscripts);
+            for (var oneScript of allScripts) {
                 var opcodeArray = [];
-                for (var block of script.blocks) {
+                for (var block of oneScript.blocks) {
                     opcodeArray.push(block.opcode);
                 }
-
                 /// Find the minimum distance (i.e. the best match, most probable origin, etc.).
-                var minScriptDistance = 1000 * script.blocks.length;
-                for (var originalSprite of originalProject.sprites) {
-                    for (var originalScript of originalSprite.scripts) {
-                        var originalOpcodeArray = [];
-                        for (var originalBlock of originalScript.blocks) {
-                            originalOpcodeArray.push(originalBlock.opcode);
-                        }
-                        var scriptDistance = lDistance(opcodeArray, originalOpcodeArray);
-                        //console.log(scriptDistance);
-                        if (minScriptDistance > scriptDistance) minScriptDistance = scriptDistance;
+                var minScriptDistance = 1000 * oneScript.blocks.length;
+                for (var originalScript of originalProject.scripts) {
+                    var originalOpcodeArray = [];
+                    for (var originalBlock of originalScript.blocks) {
+                        originalOpcodeArray.push(originalBlock.opcode);
                     }
+                    var scriptDistance = lDistance(opcodeArray, originalOpcodeArray);
+                    //console.log(scriptDistance);
+                    if (minScriptDistance > scriptDistance) minScriptDistance = scriptDistance;
                 }
                 distanceSum += minScriptDistance;
-                this.info.lDistance.val = distanceSum;
             }
         }
+        this.info.lDistance.val = distanceSum;
     }
 }
 
@@ -102,29 +108,6 @@ function installDir(dirname) {
     }
 }
 
-/// Outputs true if two objects are equal.
-function areEqual(a, b) {
-    if ((a === undefined || b === undefined) && a !== b) return false;
-    if (a === b) return true;
-    for (var x in a) {
-        if (a[x] !== b[x]) {
-            return false;
-        }
-        else {
-            return areEqual(a[x], b[x]);
-        }
-    }
-    for (var y in b) {
-        if (a[y] !== b[y]) {
-            return false;
-        }
-        else {
-            return areEqual(a[y], b[y]);
-        }
-    }
-    return true;
-}
-
 /// Assesses complexity of projects and compares them to their original versions.
 function main() {
 
@@ -138,7 +121,7 @@ function main() {
 
     /// Populates the first row of the table with headers.
     var headerRow = [
-        'Class', '# Projects', '# Sprites', '# Scripts', '# Blocks', 'L. Distance'
+        'File', 'Studio ID', 'Teacher ID', '# Sprites', '# Scripts', '# Blocks', 'L. Distance'
     ];
     rows.push(headerRow);
 
@@ -149,50 +132,55 @@ function main() {
         return;
     }
     var originalFileJSON = JSON.parse(fs.readFileSync('./test-original/' + originalFilename, 'utf8'));
-    
+
     /// Now we look into ./test-classes for folders to assess.
     var foldernames = fs.readdirSync('./test-classes');
     if (foldernames === []) {
         console.error('Please place folders containing student JSON files in ./test-classes.');
         return;
     }
+
+    /// We also open the file that cross-references studio IDs to teacher letters.
+    var classFile = fs.readFileSync('./classURLs.csv', 'utf8');
+    var classTable = Papa.parse(classFile, {header: true});
+
     for (var foldername of foldernames) {
 
-        /// Bookkeeping.
-        var numProjects = 0;
-        var dummyGrader = new module.exports();
-        dummyGrader.init(1);
+        /// Look up the teacher ID letter for this folder.
+        var teacherID = '?';
+        for (var classTableRow of classTable.data) {
+            for (var x in classTableRow) {
+                if (classTableRow[x].includes(foldername)) {
+                    teacherID = classTableRow['Teacher ID'];
+                }
+            }
+        }
 
         /// Look through all the files in the class subfolder.
         var filenames = fs.readdirSync('./test-classes/' + foldername);
         if (filenames.length) {
             for (var filename of filenames) {
+
                 /// Get the results from the file.
                 var fileJSON = JSON.parse(fs.readFileSync('./test-classes/' + foldername + '/' + filename, 'utf8'));
                 var grader = new module.exports();
                 grader.grade(fileJSON, originalFileJSON);
-        
-                /// Update our counts.
-                numProjects++;
+
+                /// Create a new row of the table.
+                var currentRow = [];
+
+                /// Fill in the row with our info.
+                currentRow.push(filename);
+                currentRow.push(foldername);
+                currentRow.push(teacherID);
                 for (var infoItem in grader.info) {
-                    dummyGrader.info[infoItem].val += grader.info[infoItem].val;
+                    currentRow.push(grader.info[infoItem].val);
                 }
+
+                /// Push the row to the table.
+                rows.push(currentRow);
             }
         }
-
-        /// Create a new row of the table.
-        var currentRow = [];
-
-        /// Fill in the row with our info.
-        currentRow.push(foldername);
-        currentRow.push(numProjects);
-        var divisor = numProjects ? numProjects : 1;
-        for (var infoItem in dummyGrader.info) {
-            currentRow.push(dummyGrader.info[infoItem].val / divisor);
-        }
-
-        /// Push the row to the table.
-        rows.push(currentRow);
     }
 
     /// Finally, we save the table as a .csv file.
