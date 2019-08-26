@@ -21,46 +21,55 @@ colors = dict(zip(string.ascii_uppercase,
             '#DAA51B', '#2F8AC4', '#764E9F', '#ED645A', '#CC3A8E', '#A5AA99',
             '#E58606', '#5D69B1', '#52BCA3']))
 
-module = sys.argv[1]
-module += '' if module[-1] == '/' else '/'
-modname = module.strip('/')
-path = module + 'csv/'
-
 min_size = 5
 
-class_perf = pd.read_csv(path + modname + '_class_performance_per_req.csv')
-class_distr = pd.read_csv(path + modname + '_class_distributions.csv')
-class_perf = class_perf[class_perf['Class Size'] > min_size]
-class_distr = class_distr[class_distr['Class Size'] > min_size]
 
+def plot(project, module, class_distributions=None, class_performance_per_req=None):
+    class_perf, class_distr = class_performance_per_req, class_distributions
 
-def main():
-    grades = list(filter(lambda entry: os.path.isdir(path + entry), os.listdir(path)))
-    print('Graphing ' + modname + ':')
+    csv_path = "./" + project + "/" + module + '/csv/'
+    graph_path = "./" + project + "/" + module + '/graphs/'
+    if class_perf is None:
+        class_perf = pd.read_csv(csv_path + module + '_class_performance_per_req.csv')
+    if class_distr is None:
+        class_distr = pd.read_csv(csv_path + module + '_class_distributions.csv')
+    
+    
+    class_perf = class_perf[class_perf['Class Size'] > min_size]
+    class_distr = class_distr[class_distr['Class Size'] > min_size]
+
+    grades = list(filter(lambda entry: os.path.isdir(csv_path + entry), os.listdir(csv_path)))
+    print('Graphing ' + module + ':')
     for grade in grades:
-        print('  performance and distribution graphs for grade ' + str(grade))
-        plot_grade(grade)    
+       
+        plot_grade(graph_path, module, grade, class_perf, class_distr)    
+        print('  performance and distribution graphs for grade ' + str(grade) + '.')
 
-    print('  performance by classroom and grade')
-    plot_module(grades)
+    plot_module(graph_path, module, grades, class_perf)
+    print('  performance by classroom and grade.')
+    print('Done.')
 
 
-def plot_grade(grade):
+def plot_grade(path, module, grade, class_perf, class_distr):
     df = class_perf
     df2 = class_distr
-    pdf = PdfPages(module + 'graphs/' + modname + '-' + grade + '.pdf')
 
-    df = df.loc[df['Grade'] == int(grade)]
-    by_req_data = df.iloc[:, 4:len(df.columns) - 2]
+    pdf = PdfPages(path + module + '-' + grade + '.pdf')
+
+    df = df.loc[df['Grade'] == grade]
+
+    by_req_data = df.iloc[:, 4:len(df.columns) - 1]
+
     tIDs = list(df['Teacher ID'])
     cIDs = list(df['Studio ID'])
     class_sizes = list(df.iloc[:, 3])
 
     # construct per-requirement graph
     plt.subplots(figsize=(10, 6))
-    plt.title((modname + ' grade ' + grade + ' Classroom Performance Per Requirement').title())
+    plt.title((module + ' grade ' + grade + ' Classroom Performance Per Requirement').title())
 
     req_count = len(by_req_data.columns)
+
     class_count = len(by_req_data.index)
     pos = list(range(req_count))
     width = .7 / (class_count)
@@ -83,14 +92,15 @@ def plot_grade(grade):
     plt.grid(axis='y', zorder=0, which='both')
     plt.legend(bbox_to_anchor=(1.04, 1), loc='upper right', ncol=1)
 
-    plt.savefig(module + 'graphs/pngs/' + modname + '-' + grade + '-per-req.png', bbox_inches='tight')
+    plt.savefig(path + 'pngs/' + module + '-' + grade + '-per-req.png', bbox_inches='tight')
     pdf.savefig(bbox_inches='tight')
+    plt.close()
 
     # construct totals graph
     if class_count > 1:
         total_data = df['Total']
         plt.subplots(figsize=(10, 6))
-        plt.title((modname + ' grade ' + grade + ' Classroom Performance Totals').title())
+        plt.title((module + ' grade ' + grade + ' Classroom Performance Totals').title())
         plt.bar(
             list(range(class_count)),
             total_data,
@@ -104,10 +114,11 @@ def plot_grade(grade):
         plt.ylim([0, 100])
         plt.grid(axis='y', zorder=0, which='both')
 
-        plt.savefig(module + 'graphs/pngs/' + modname + '-' + grade + '-totals.png', bbox_inches='tight')
+        plt.savefig(path + 'pngs/' + module + '-' + grade + '-totals.png', bbox_inches='tight')
         pdf.savefig(bbox_inches='tight')
+        plt.close()
 
-    df2 = df2.loc[df2['Grade'] == int(grade)]
+    df2 = df2.loc[df2['Grade'] == grade]
     distr_data = df2.iloc[:, 4:]
 
     # construct distribution graph
@@ -137,19 +148,20 @@ def plot_grade(grade):
     if class_count > 1:
         fig.suptitle('Grade Distributions')
 
-    plt.savefig(module + 'graphs/pngs/' + modname + '-' + grade + '-distributions.png', bbox_inches='tight')
+    plt.savefig(path + 'pngs/' + module + '-' + grade + '-distributions.png', bbox_inches='tight')
     pdf.savefig(bbox_inches='tight')
 
     pdf.close()
+    plt.close()
 
 
-def plot_module(grades):
+def plot_module(path, module, grades, class_perf):
     df = class_perf
-    totals_data = [df.loc[df['Grade'] == int(grade)] for grade in grades]
+    totals_data = [df.loc[df['Grade'] == grade] for grade in grades]
 
     # construct graph measuring performance by classroom and grade
     fig, axs = plt.subplots(1, len(grades), sharey=True, sharex=True, figsize=(3 * len(grades), 6))
-    fig.suptitle((modname + ' Requirement Completion by Classroom and Grade').title())
+    fig.suptitle((module + ' Requirement Completion by Classroom and Grade').title())
     fig.text(0.5, 0.05, 'Grades', ha='center', va='center')
     fig.text(0.08, 0.5, 'Classroom Completion (%)', ha='center', va='center', rotation='vertical')
 
@@ -169,9 +181,10 @@ def plot_module(grades):
         ax.tick_params(labelbottom=False)
         ax.legend(bar, labels, bbox_to_anchor=(1, -0.1), loc='upper right', ncol=1)
 
-    plt.savefig(module + 'graphs/pngs/' + modname + '-by-classroom.png', bbox_inches='tight')
-    plt.savefig(module + 'graphs/' + modname + '-teacher-analysis.pdf', bbox_inches='tight')
+    plt.savefig(path + 'pngs/' + module + '-by-classroom.png', bbox_inches='tight')
+    plt.savefig(path + module + '-teacher-analysis.pdf', bbox_inches='tight')
+    plt.close()
 
 
 if __name__ == '__main__':
-    main()
+    plot(sys.argv[1], sys.argv[2])

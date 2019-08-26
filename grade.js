@@ -8,118 +8,85 @@
 const fs  = require('fs');
 const ObjectsToCsv = require('objects-to-csv');
 
-var graderPath  = process.argv[2];
-var projectPath = process.argv[3];
-var resultsFile = process.argv[4];
-var isVerbose = false;
-
-data = []
-
-//check for verbose flag
-if (process.argv.length > 5) {
-    isVerbose = true;
+const projectGradersDir = {
+    ['encore']: 'grading-scripts-s3', 
+    ['act-one']: 'act1-grading-scripts'
 }
 
-
-//Check if project is directory
-
-var projectPathIsDirectory = fs.lstatSync(projectPath).isDirectory();
+const is = it => (it !== undefined && it !== null && it != {});
 
 
-//Wipe the results file to allow for new assessment
-fs.writeFile(resultsFile, "", err => {
-    if (err) throw err;
-});
+function main([project, mod, tID, grade, studioID, studioPath, verbose=null]) {
+
+    let GraderClass = require(`../${projectGradersDir[project]}/${mod}.js`);
+
+    let reqs = {path: `./${project}/${mod}/csv/${grade}/${tID}-${studioID}.csv`, data: []};
+    let deepDive = {path: `./${project}/${mod}/csv/${mod}-deep-dive.csv`, data: []};
 
 
-//If project path is a directory, iterate the test over all files
-if (projectPathIsDirectory) {
-    var fileNames = fs.readdirSync(projectPath);
-    for (var fileName of fileNames.filter(name => /_*\.json/g.test(name) )) {
-        fullProjectPath = projectPath + '/' + fileName;
-        var studentID = fileName.replace(".json","");
-        gradeProjectWithGrader(fullProjectPath, graderPath, isVerbose, resultsFile, studentID);
-    }
-}
+    let fileNames = fs.readdirSync(studioPath);
+    let isDeepDive = true;
 
-//If not, just run it once on the file
-else {
-    gradeProjectWithGrader(projectPath, graderPath, isVerbose, resultsFile);
-}
+    for (let name of fileNames.filter(name => /_*\.json/g.test(name) )) {
+        
+        let json = require(`${studioPath}/${name}`);
+        let grader = new GraderClass();
 
-// converting json to csv file, moving the row with the most columns to the top
-// so that the conversion module functions properly
-var largestRowIndex = data.map(row => Object.keys(row).length)
-                          .reduce((a, b, i) => a[0] < b? [b, i] : a, [Number.MIN_VALUE, -1])[1];
-var tmp = data[0];
+        let studentID = name.replace(".json","");
+        let reqsRow = {ID: studentID, ['Error grading project']: 0};
+        let deepDiveRow = {['Teacher ID']: tID, ['Classroom ID']: studioID, ['Student ID']: studentID}
 
-data[0] = data[largestRowIndex];
+        if (verbose) console.log(studentID);
 
-data[largestRowIndex] = tmp;
-try {
-    new ObjectsToCsv(data).toDisk(resultsFile);
-}
-catch(err) {
-    console.log(data);
-}
-
-
-/// Helpers
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function gradeProjectWithGrader(projectPath, graderPath,isVerbose,resultsFile,studentID) {
-
-    var GraderClass = require(graderPath);
-    var grader = new GraderClass();
-
-    //Get JSON data
-    var rawdata = fs.readFileSync(projectPath);  
-    var projectJSON = JSON.parse(rawdata); 
-    var row = {ID: studentID, ['Error grading project']: 0};
-
-    
-    if (isVerbose) console.log(studentID);
-
-    
-    //Run grade and output results
-    try {
-        grader.grade(projectJSON, '');
-
-        if (thereExists(grader.requirements)) {
-            
-            for (var item of Object.values(grader.requirements)) {
-                row[item.str] = ((item.bool) ? (1) : (0));
+        //Run grade and output results
+        try {
+            grader.grade(json, '');
+            if (is(grader.requirements)) 
+                for (let item of Object.values(grader.requirements)) 
+                    reqsRow[item.str] = ((item.bool) ? (1) : (0));
+            /* if (is(grader.extensions)) {
+                for (var item of Object.values(grader.extensions)) {
+                    row[item.str] = ((item.bool) ? (1) : (0));
+                }
+            } */
+            if (isDeepDive && is(grader.info)) {
+                deepDiveRow = {...deepDiveRow, ...grader.info};
+                deepDiveRow.blockTypes = [... deepDiveRow.blockTypes].reduce((acc, b) => acc + b + '|', '');
+            } else {
+                isDeepDive = false;
             }
         }
-        /*
-        if (thereExists(grader.extensions)) {
-            for (var item of Object.values(grader.extensions)) {
-                row[item.str] = ((item.bool) ? (1) : (0));
-            }
-        } 
-        */
-    }
-    //If there was an error, report it
-    catch(err) {
-        row['Error grading project'] = 1;
+        //If there was an error, report it
+        catch(err) {
+            reqsRow['Error grading project'] = 1;
+            deepDiveRow['Error grading project'] = 1;
+            console.log('Error grading project:', studentID)
+            console.log(err);
+        }
 
-        console.log('Error grading project:', studentID)
-        console.log(err);
+        reqs.data.push(reqsRow);
+        if (isDeepDive) deepDive.data.push(deepDiveRow)
     }
 
-    if (isVerbose) { //if verbose flag, output the results to the console
-        console.log(row)
+    // converting json to csv file, moving the row with the most columns to the top
+    // so that the conversion module functions properly
+    var largestRowIndex = reqs.data.map(row => Object.keys(row).length)
+        .reduce((a, b, i) => a[0] < b? [b, i] : a, [Number.MIN_VALUE, -1])[1];
+    var tmp = reqs.data[0];
+    reqs.data[0] = reqs.data[largestRowIndex];
+    reqs.data[largestRowIndex] = tmp;
+
+    try {new ObjectsToCsv(reqs.data).toDisk(reqs.path); } 
+    catch(err) {console.log(reqs.data); }
+    if (isDeepDive) {
+        try { new ObjectsToCsv(deepDive.data).toDisk(deepDive.path, { append: true }); } 
+        catch(err) {console.log(deepDive.data); }
     }
-    
-    data.push(row);
-    //write the output to the file
-    //fs.appendFileSync(resultsFile,output)
-
-
 }
 
-function thereExists(it) {
-    return (it !== undefined && it !== null && it !== {});
-}
+main(process.argv.slice(2));
+
+
+
   
   

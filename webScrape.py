@@ -1,7 +1,7 @@
 # Web scraping tool for static analysis
 # Zack Crenshaw
 # Adapted from code by Jean Salac
-# Modified by Marco Anaya to retrieve name of parent project when 
+# Modified by Marco Anaya to retrieve name of parent project when
 # it was remixed by a Scratch Encore account
 
 # COMMAND LINE: python3 webScrape.py (studio URL) (file path)
@@ -14,15 +14,9 @@ from bs4 import BeautifulSoup
 import json
 
 
-def main():
-
-    # Take in Scratch Studio URL
-    studioURL = sys.argv[1]
+def scrapeStudio(studioURL, mod_dir):
 
     studioID = studioURL.strip('https://scratch.mit.edu/studios/')
-
-    # Get module
-    module = sys.argv[2]
 
     # Convert studio URL to the one necessary for scraping Scratch usernames and project IDs.
     # Pull projects until page number does not exist
@@ -41,7 +35,7 @@ def main():
             # Find the span object with owner attribute
             span_string = str(project.find("span", "owner"))
 
-             # Get project ID
+            # Get project ID
             proj_id = project.get('data-id')
 
             # Pull scratch username
@@ -59,15 +53,15 @@ def main():
                 parent_r = requests.get(sa.create_proj_info_URL(parent_id))
                 parent_json = json.loads(parent_r.content)
                 scratch_username = parent_json['author']['username']
-                
+
             if scratch_username == "ScratchEncore": #ignore scratch encore projects
                 continue
-           
+
             # Read json file from URL. Convert Scratch URL to Scratch API URL, then read file.
             apiURL = sa.create_API_URL(proj_id)
             json_stream = requests.get(apiURL, allow_redirects=True)
 
-            user_directory = module + "/json_files_by_studio/" + studioID+ "/"
+            user_directory = mod_dir + "/json_files_by_studio/" + studioID + "/"
             json_filename = user_directory + scratch_username + ".json"
             try:
                 os.makedirs(user_directory)
@@ -82,4 +76,4 @@ def main():
 
 
 if __name__ == '__main__':
-        main()
+        scrapeStudio(sys.argv[1], sys.argv[2])

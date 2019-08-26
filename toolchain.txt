@@ -1,65 +1,24 @@
 Full Static Analysis Toolchain (Summer 2019; 7/24/19)
 
-The toolchain created by Zach Crenshaw in Spring 2019 has been reduced to:
-    running run.py for a module (i.e. events-L1) to turn the raw data to CSV format and graph it
-
 This directory structure will be created as a result of running run.py on a module:
 
-/[module]
-.    /csv
-.    .   /4     (a folder only for each grade present in the metadata CSV)
-.    .   /5
-.    .   /6
-.    .   /7
-.    .   /8
-.    /graphs
-.    .   /pngs
-.    /json_files_by_studio
+/[project]
+.   /[module]
+.   .    /csv
+.   .    .   /4     (a folder only for each grade present in the metadata CSV)
+.   .    .   /5
+.   .    .   /6
+.   .    .   /7
+.   .    .   /8
+.   .    /graphs
+.   .    .   /pngs
+.   .    /json_files_by_studio
 
 If the necessary python3 modules are installed (explained in README.md), 
 and "metadata.csv" includes Scratch studio URLs for that module,
 the following command should work:
-run.py [module]
+python3 run.py project [module] [--verbose/-v]
 
-Additionally, run.py could be ran with no arguments,
-and it will search "metadata.csv" and analyze all modules with information
+Additionally, run.py could be ran with only the project argument,
+and will search for *project* + "-metadata.csv" and analyze all modules with information
 
-
-_______________________________________
-(Legacy)
-(6/6/19)
-
-# Link to Google Doc with this information: https://docs.google.com/document/d/1ya0KAzGwF_zaIjrqUfPIy7dB147JGXIgK_MWa0LBaR0/edit?usp=sharing
-
-# Quick Tip: Find and replace the module name to run on each module
-# Quick tip: Just copy and paste this entire document into the command line (the invalid commands will be caught by the machine)
-# Note: anything in aggregated (and it’s subdirectories) must be wiped before re-doing aggregation (mergeCSVs.py currently just appends data, does not overwrite it)
-
-# Grade projects
-# Take out “-noWeb” to scrape from web
-python3 batch.py ./events-L1/metadata-events-L1-noWeb.csv
-
-# append all the graded csvs to each other
-python3 mergeCSVs.py ./events-L1/csv/3/ ./events-L1/csv/aggregated/3.csv
-python3 mergeCSVs.py ./events-L1/csv/4/ ./events-L1/csv/aggregated/4.csv
-python3 mergeCSVs.py ./events-L1/csv/5/ ./events-L1/csv/aggregated/5.csv
-python3 mergeCSVs.py ./events-L1/csv/6/ ./events-L1/csv/aggregated/6.csv
-python3 mergeCSVs.py ./events-L1/csv/7/ ./events-L1/csv/aggregated/7.csv
-python3 mergeCSVs.py ./events-L1/csv/8/ ./events-L1/csv/aggregated/8.csv
-
-# create count for each grade
-python3 countCSV.py ./events-L1/csv/aggregated/3.csv ./events-L1/csv/aggregated/counted/3-counted.csv
-python3 countCSV.py ./events-L1/csv/aggregated/4.csv ./events-L1/csv/aggregated/counted/4-counted.csv
-python3 countCSV.py ./events-L1/csv/aggregated/5.csv ./events-L1/csv/aggregated/counted/5-counted.csv
-python3 countCSV.py ./events-L1/csv/aggregated/6.csv ./events-L1/csv/aggregated/counted/6-counted.csv
-python3 countCSV.py ./events-L1/csv/aggregated/7.csv ./events-L1/csv/aggregated/counted/7-counted.csv
-python3 countCSV.py ./events-L1/csv/aggregated/8.csv ./events-L1/csv/aggregated/counted/8-counted.csv
-
-# append the grade-wide counts to each other
-python3 mergeCSVs.py ./events-L1/csv/aggregated/counted ./events-L1/csv/aggregated/aggregated.csv
-
-# add letter heading to a copy of the aggregated csv
-python3 addLetterHeading.py ./events-L1/csv/aggregated/aggregated.csv copy 4
-
-# make a grouped bar graph
-python3 groupedBarGraph.py ./events-L1/

@@ -7,96 +7,104 @@
 import sys
 import os
 import csv
+import click
 from subprocess import call
 from Naked.toolshed.shell import execute_js
 
+from dataProcessing import aggregate
+from plot import plot
+from webScrape import scrapeStudio
 
-def main():
+
+@click.command()
+@click.argument('project', nargs=1)
+@click.argument('keyword', nargs=1, default='')
+@click.option('--verbose', '-v', is_flag=True, help='Activates verbose mode.')
+def main(project, keyword, verbose):
+    """Program that analyzes a CANON PROJECT, specifically modules that match an optional KEYWORD
+    (i.e. animation-L2, L2, animation). Without the optional argument, all modules in the project will be graded."""
     
-    arg = sys.argv[1] if len(sys.argv) > 1 else "*"
-    verbose = sys.argv[2] if len(sys.argv) > 2 else ""
-
-    if "verbose" in verbose:
-        verbose = " --verbose"
-        print("Verbose grading active.")
-
-    file = "./metadata.csv"
-
-    print("Start of grading: \n")
+    def vprint(s):
+        if verbose:
+            print(s)
+    
+    project_path = "./" + project
+    file = project_path + "-metadata.csv"
+    project_path += "/"
     grades = []
 
-    # iterate through folder
+    vprint("Verbose grading active.")
+
     with open(file, 'r') as f:
         reader = csv.reader(f)
         csv_to_list = list(reader)
-        modules = rows_to_analyze = None
+        modules = None
+        rows_to_analyze = None
         try:
             modules = csv_to_list[0][2:]
         except:
-            print("Error: metadata.csv improperly formatted")
+            print("Error: metadata file improperly formatted.")
             return
 
-        if arg == "*":
-            rows_to_analyze = {row: module for row, module in enumerate(modules)}
-            print("Running analysis for all modules...")
-        elif arg in modules:
-            rows_to_analyze = {modules.index(arg): arg}
-            print("Running analysis for " + arg + "...")
-        else: 
-            print("Error: module name not found in metadata.csv")
+        rows_to_analyze = {row: module for row, module in enumerate(modules) if keyword in module}
+        print("Running analysis for " + ", ".join(rows_to_analyze.values()) + "...")
+        
+        if not rows_to_analyze:
+            print("Error: keyword not found in any module in the metadata file.")
             return
         
         for module in rows_to_analyze.values():
-            os.makedirs("./" + module + "/csv/", exist_ok=True)
+            csv_path = project_path + module + "/csv/"
+            os.makedirs(csv_path, exist_ok=True)
+            if os.path.exists(csv_path + module + '-deep-dive.csv'):
+                os.remove(csv_path + module + '-deep-dive.csv')
 
         grades = {module: [] for module in rows_to_analyze.values()}
-        for tID, grade, *urls in csv_to_list[1:]:
 
+        for tID, grade, *urls in csv_to_list[1:]:
+            print('Grading teacher: ' + tID + ', grade: ' + grade + '.')
             for row, module in rows_to_analyze.items():
                 # check if row is empty
                 studioURL = urls[row]
                 if studioURL.strip() == "":
                     continue
+                studioID = studioURL.strip('htps:/cra.mieduo')  # Takes off "https://scratch.mit.edu/studios/"
+
                 # create a folder for the grade if it has not been made yet
                 if grade not in grades[module]:
                     grades[module].append(grade)
-                    os.makedirs("./" + module + "/csv/" + grade + "/", exist_ok=True)
+                    os.makedirs(project_path + module + "/csv/" + grade + "/", exist_ok=True)
 
-                grade_and_save(studioURL, tID, module, grade, verbose)
+                # Get folder for a module
+                mod_dir = project_path + module
 
+                studio_path = mod_dir + "/json_files_by_studio/" + studioID + "/"
+                
+                # Get data from web if not found locally
+                if (os.path.isdir(studio_path) is True):
+                    vprint("  Studio " + studioID + " found locally.") 
+                else:
+                    vprint("  Studio " + studioID + " not found locally, scraping data from web...")
+                    scrapeStudio(studioURL, mod_dir)
+                    vprint("  Scraped.\n")
+
+
+                # Run grading script on studio
+                args = [project, module, tID, grade, studioID, studio_path]
+                if verbose:
+                    args.append('verbose')
+                execute_js('grade.js', " ".join(args))
+
+        # aggregate data and make graphs for each module
         for module in rows_to_analyze.values():
-            call(['python3', 'dataProcessing.py', module])
-            os.makedirs("./" + module + "/graphs/pngs/", exist_ok=True)
-            call(['python3', 'plot.py', module])
 
+            data = aggregate(project, module)
+            os.makedirs(project_path + module + "/graphs/pngs/", exist_ok=True)
+            if project == 'encore':
+                data_names = ['class_distributions', 'class_performance_per_req']
+                kwargs = {name: data[name] for name in data_names}
 
-def grade_and_save(studioURL, teacherID, module, grade, verbose=""):
-
-    studioID = studioURL.strip('htps:/cra.mieduo')  # Takes off "https://scratch.mit.edu/studios/"
-    
-    # Get folder for a module
-    mod_dir = "./" + module
-
-    project = mod_dir + "/json_files_by_studio/" + studioID+"/"
-    print(project)
-    
-    # Get data from web if not found locally
-    if (os.path.isdir(project) is True):
-        print("Studio " + studioID + " found locally.") 
-    else:
-        print("Studio " + studioID + " not found locally, scraping data from web...")
-        call(["python3", "webScrape.py", studioURL, mod_dir])
-        print("Scraped.\n")
-
-    # looks for script in higher directory
-    script = "../grading-scripts-s3/" + module + ".js"
-    folder = mod_dir + "/csv/" + grade + '/'
-    results = folder + teacherID + '-' + studioID + ".csv"
-
-    # Run grading script on studio
-    print("Running grading script...")
-    execute_js('grade.js', script + " " + project + " " + results + verbose)
-    print("Finished grading.\n")
+                plot(project, module, **kwargs)
 
 
 if __name__ == '__main__':

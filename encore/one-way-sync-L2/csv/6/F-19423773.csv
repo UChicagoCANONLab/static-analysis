@@ -1,0 +1,23 @@
+ID,Error grading project,Project has a backdrop,Five sprites created,One sprite sends a broadcast,Message received by sprite 1 and sprite does something,Message received by sprite 2 and sprite does something,Message received by sprite 3 and sprite does something,Message received by sprite 4 and sprite does something
+11JCL06,0,1,0,0,0,0,0,0
+12JCL06,0,1,0,0,0,0,0,0
+13JCL06,0,1,1,1,1,1,1,0
+14JCL06,0,0,1,0,0,0,0,0
+15JCL06,0,1,0,0,0,0,0,0
+17JCL06,0,1,0,1,1,1,0,0
+19JCL06,0,1,0,1,1,0,0,0
+1JCL06,0,1,1,1,1,1,1,1
+20JCL06,0,1,0,1,1,1,1,0
+21JCL06,0,1,1,1,1,1,1,0
+22JCL06,0,1,0,1,1,1,1,0
+24JCL06,0,1,0,1,0,0,0,0
+25JCL06,0,1,0,1,1,1,1,0
+27JCL06,0,1,1,1,0,0,0,0
+29JCL06,0,1,1,1,0,0,0,0
+30JCL06,0,1,1,1,1,1,1,1
+31JCL06,0,1,0,0,0,0,0,0
+32JCL06,0,1,1,1,1,1,1,1
+4JCL06,0,1,0,1,1,1,0,0
+6JCL06,0,1,1,1,1,0,0,0
+7JCL06,0,1,1,1,1,1,1,1
+9JCL06,0,1,0,1,1,1,1,0

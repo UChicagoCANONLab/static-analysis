@@ -1,0 +1,25 @@
+ID,Error grading project,Djembe passes unique message to Mali child,"When Djembe is clicked, Djembe plays music","When Djembe is clicked, Mali child dances",Start button sprite created,Start button passes the same message to all other sprites,A sprite plays or dances when the start button is clicked,Another sprite plays or dances when the start button is clicked,A third sprite plays or dances when the start button is clicked,A fourth sprite plays or dances when the start button is clicked
+10JCL06,0,0,0,0,0,0,0,0,0,0
+11JCL06,0,0,0,0,1,0,0,0,0,0
+13JCL06,0,1,1,1,0,0,0,0,0,0
+14JCL06,0,1,1,1,0,0,0,0,0,0
+15JCL06,0,1,1,1,0,0,0,0,0,0
+16JCL06,0,1,1,1,1,0,1,1,1,0
+18JCL06,0,1,1,1,0,0,0,0,0,0
+1JCL06,0,1,1,1,1,0,1,0,0,0
+20JCL06,0,1,1,1,1,0,0,0,0,0
+21JCL06,0,1,1,1,1,0,1,0,0,0
+23JCL06,0,0,1,0,0,0,0,0,0,0
+25JCL06,0,0,0,0,0,0,0,0,0,0
+26JCL06,0,0,0,0,0,0,0,0,0,0
+27JCL06,0,1,1,1,0,0,0,0,0,0
+28JCL06,0,1,1,0,0,0,0,0,0,0
+29JCL06,0,1,1,0,1,0,1,0,0,0
+2JCL06,0,1,1,1,0,0,0,0,0,0
+31JCL06,0,0,0,0,1,0,0,0,0,0
+32JCL06,0,0,0,0,0,0,0,0,0,0
+4JCL06,0,1,1,1,0,0,0,0,0,0
+5JCL06,0,0,1,1,0,0,0,0,0,0
+6JCL06,0,1,1,1,0,0,0,0,0,0
+7JCL06,0,1,1,1,1,0,1,0,0,0
+8JCL06,0,1,1,1,0,0,0,0,0,0

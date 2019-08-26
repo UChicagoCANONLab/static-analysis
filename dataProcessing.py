@@ -1,7 +1,7 @@
 # By Marco Anaya
 
 
-# python3 processData.py (module)
+# python3 processData.py (path)
 
 import sys
 import os
@@ -9,25 +9,22 @@ import os
 import pandas as pd
 
 
-data = {
-    'student_performance': [],
-    'class_distributions': [],
-    'class_performance_per_req': []
-}
+def aggregate(project, module):
+    data = {
+        'student_performance': [],
+        'class_distributions': [],
+        'class_performance_per_req': []
+    }
 
-
-def main():
-    module = sys.argv[1]
-    module += '' if module[-1] == '/' else '/'
-    modname = module.strip('/')
+    path = "./" + project + "/" + module + "/"
 
     decimal_place = 2
 
-    for grade in os.listdir(module + 'csv/'):
-        if not os.path.isdir(module + 'csv/' + grade) or 'aggregated' in grade:
+    for grade in os.listdir(path + 'csv/'):
+        if not os.path.isdir(path + 'csv/' + grade) or 'aggregated' in grade:
             continue
 
-        grade_dir = module + 'csv/' + grade + '/'
+        grade_dir = path + 'csv/' + grade + '/'
         # for each classroom of data, appending a row/rows to each data array
         for filename in os.listdir(grade_dir):
             if not filename.endswith(".csv"):
@@ -58,6 +55,7 @@ def main():
                 **(100 * score_totals / student_count).round(decimal_place).to_dict(),
                 **{'Total': (score_totals.sum() * 100 / possible_score).round(decimal_place)}
             }
+
             data['class_performance_per_req'].append(by_reqs_row)
 
             # aggregating row of class_distributions by class
@@ -74,14 +72,16 @@ def main():
                     "Out of": req_count,
                     "Percentage": round((val / req_count), decimal_place)
                 }})
-    print("Creating data files for " + modname + ":")
+    print("Creating data files for " + module + ":")
     for name, d in data.items():
-        path = module + 'csv/' + modname + '_' + name + '.csv'
-        print(" ", path)
-        pd.DataFrame(d, columns=d[0].keys()) \
-            .to_csv(path, index=False)
-    sys.exit()
+        file_path = path + 'csv/' + module + '_' + name + '.csv'
+        
+        data[name] = pd.DataFrame(d, columns=d[0].keys())
+        data[name].to_csv(file_path, index=False)
+        print(" ", file_path)
+    
+    return data
 
 
 if __name__ == '__main__':
-    main()
+    aggregate(sys.argv[1], sys.argv[2])

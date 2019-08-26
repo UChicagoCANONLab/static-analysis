@@ -1,0 +1,27 @@
+ID,Error grading project,Car's costume has been changed.,Car stops at something other than the stop sign.,Car says something after it stops.,Changed the speed of the car.
+RC7B1,0,0,0,0,0
+RC7B10,0,1,1,1,1
+RC7B11,0,1,1,1,1
+RC7B12,0,1,1,0,1
+RC7B13,0,1,1,1,0
+RC7B14,0,0,0,0,0
+RC7B15,0,0,1,0,1
+RC7B16,0,1,1,0,1
+RC7B17,0,1,0,0,0
+RC7B18,0,1,1,0,1
+RC7B19,0,1,1,0,1
+RC7B2,0,1,1,1,1
+RC7B20,0,1,1,1,0
+RC7B21,0,1,1,1,1
+RC7B24,0,1,1,0,1
+RC7B25,0,1,0,0,0
+RC7B26,0,1,1,1,1
+RC7B27,0,1,1,0,1
+RC7B28,0,1,1,0,1
+RC7B3,0,1,1,1,1
+RC7B31,0,0,1,0,1
+RC7B4,0,0,1,0,0
+RC7B5,0,1,0,0,1
+RC7B7,0,0,1,0,1
+RC7B8,0,1,0,1,1
+RC7B9,0,1,0,1,1

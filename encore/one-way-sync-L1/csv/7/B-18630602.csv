@@ -1,0 +1,18 @@
+ID,Error grading project,Djembe passes unique message to Mali child,"When Djembe is clicked, Djembe plays music","When Djembe is clicked, Mali child dances",Start button sprite created,Start button passes the same message to all other sprites,A sprite plays or dances when the start button is clicked,Another sprite plays or dances when the start button is clicked,A third sprite plays or dances when the start button is clicked,A fourth sprite plays or dances when the start button is clicked
+RC7B1,0,0,0,0,0,0,0,0,0,0
+RC7B10,0,1,1,1,0,0,0,0,0,0
+RC7B11,0,0,0,0,0,0,0,0,0,0
+RC7B15,0,0,0,0,0,0,0,0,0,0
+RC7B18,0,0,0,0,0,0,0,0,0,0
+RC7B19,0,1,1,1,0,0,0,0,0,0
+RC7B20,0,1,1,1,0,0,0,0,0,0
+RC7B21,0,0,0,0,0,0,0,0,0,0
+RC7B23,0,1,1,1,0,0,0,0,0,0
+RC7B24,0,1,1,1,0,0,0,0,0,0
+RC7B28,0,1,1,1,0,0,0,0,0,0
+RC7B29,0,0,0,0,0,0,0,0,0,0
+RC7B3,0,0,0,0,0,0,0,0,0,0
+RC7B5,0,1,1,1,0,0,0,0,0,0
+RC7B6,0,0,0,0,0,0,0,0,0,0
+RC7B7,0,0,0,0,0,0,0,0,0,0
+RC7B9,0,1,1,1,1,0,0,0,0,0
