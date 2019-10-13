@@ -38,6 +38,7 @@ def plot(project, module, class_distributions=None, class_performance_per_req=No
     class_perf = class_perf[class_perf['Class Size'] > min_size]
     class_distr = class_distr[class_distr['Class Size'] > min_size]
 
+    # Runs plot_grade() for each grade level, generating three graphs
     grades = list(filter(lambda entry: os.path.isdir(csv_path + entry), os.listdir(csv_path)))
     print('Graphing ' + module + ':')
     for grade in grades:
@@ -45,6 +46,7 @@ def plot(project, module, class_distributions=None, class_performance_per_req=No
         plot_grade(graph_path, module, grade, class_perf, class_distr)    
         print('  performance and distribution graphs for grade ' + str(grade) + '.')
 
+    # Generates teacher analysis for the whole module
     plot_module(graph_path, module, grades, class_perf)
     print('  performance by classroom and grade.')
     print('Done.')
@@ -154,7 +156,7 @@ def plot_grade(path, module, grade, class_perf, class_distr):
     pdf.close()
     plt.close()
 
-
+# plots teacher analysis using TOTALS column from CLASS PERFORMANCE PER REQUIREMENT
 def plot_module(path, module, grades, class_perf):
     df = class_perf
     totals_data = [df.loc[df['Grade'] == grade] for grade in grades]
