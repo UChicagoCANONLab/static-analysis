@@ -1,16 +1,16 @@
-ID,Error grading project,Bee starts at the beginning of the track.,Bee has an event block for the down arrow.,Bee changes costume on the down arrow.,Bee wait block on down arrow.,Bee has an event block for the space bar.,Bee loops on the space bar event.,Bee moves within the loop.,Bee changes costume within the loop.,Bee has a wait block within the loop.,Bee reaches the finish line through animation.
-11JCL06,0,1,1,1,1,0,0,0,0,0,0
-14JCL06,0,1,0,0,0,1,1,1,0,0,0
-16JCL06,0,1,0,0,0,1,1,1,1,1,1
-17JCL06,0,1,1,1,1,1,1,1,1,1,1
-19JCL06,0,1,1,1,1,1,1,1,1,1,1
-20JCL06,0,1,0,0,0,1,1,1,1,1,1
-21JCL06,0,1,1,1,1,1,1,0,1,1,0
-22JCL06,0,1,0,0,0,0,0,0,0,0,0
-24JCL06,0,1,0,0,0,1,0,0,0,0,0
-25JCL06,0,1,0,0,0,1,1,1,0,0,0
-26JCL06,0,1,1,1,1,1,1,1,1,1,1
-32JCL06,0,0,0,0,0,0,0,0,0,0,0
-6JCL06,0,1,1,1,1,1,1,1,1,1,1
-7JCL06,0,1,1,1,1,1,1,1,1,1,1
-8JCL06,0,1,1,1,1,1,1,1,1,1,1
+ID,Error grading project,Both Snake and Bee have an event block for the down arrow.,Both Snake and Bee switch costumes on the down arrow.,Both Snake and Bee have a wait block on down arrow.,Bug fixed: both Snake and Bee finish the race when the space bar is pressed.
+11JCL06,0,0,0,0,0
+14JCL06,0,0,0,0,0
+16JCL06,0,0,0,0,1
+17JCL06,0,1,1,1,1
+19JCL06,0,1,1,1,1
+20JCL06,0,0,0,0,1
+21JCL06,0,0,0,0,0
+22JCL06,0,0,0,0,0
+24JCL06,0,0,0,0,0
+25JCL06,0,0,0,0,0
+26JCL06,0,1,1,1,1
+32JCL06,0,0,0,0,0
+6JCL06,0,1,1,1,1
+7JCL06,0,1,1,1,1
+8JCL06,0,1,1,1,1

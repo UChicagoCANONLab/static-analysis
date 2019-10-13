@@ -6,8 +6,8 @@ ID,Error grading project,Vehicle sprite stops when touching another sprite or an
 20aspoe303,0,1,1,1
 22lspoe303,0,1,0,1
 23bspoe303,0,1,0,1
-26ctpoe303,0,1,0,1
+26ctpoe303,0,0,0,0
 28mwpoe303,0,1,1,1
-29awpoe303,0,0,0,0
+29awpoe303,0,1,0,1
 4mcpoe303,0,0,0,0
-8bgpoe303,0,1,0,1
+8bgpoe303,1,,,

@@ -49,6 +49,8 @@ def plot(project, module, class_distributions=None, class_performance_per_req=No
     # Generates teacher analysis for the whole module
     plot_module(graph_path, module, grades, class_perf)
     print('  performance by classroom and grade.')
+    plot_module_by_req(graph_path, module, grades, class_perf)
+    print('  performance for a single requirement by classroom and grade.')
     print('Done.')
 
 
@@ -186,6 +188,42 @@ def plot_module(path, module, grades, class_perf):
     plt.savefig(path + 'pngs/' + module + '-by-classroom.png', bbox_inches='tight')
     plt.savefig(path + module + '-teacher-analysis.pdf', bbox_inches='tight')
     plt.close()
+
+# plots teacher analysis by requirement
+def plot_module_by_req(path, module, grades, class_perf):
+    df = class_perf
+    totals_data = [df.loc[df['Grade'] == grade] for grade in grades]
+
+    for req_index in range(4,len(df.columns)-1):
+        # construct graph measuring performance by classroom and grade
+        fig, axs = plt.subplots(1, len(grades), sharey=True, sharex=True, figsize=(3 * len(grades), 6))
+        fig.suptitle((module + ' Single Requirement Completion by Classroom and Grade').title())
+        fig.text(0.5, 0.93, 'Requirement: ' + df.columns[req_index] + ' [' + str(req_index-3) + ']', ha='center', va='center')
+        fig.text(0.5, 0.05, 'Grades', ha='center', va='center')
+        fig.text(0.08, 0.5, 'Classroom Completion for Requirement (%)', ha='center', va='center', rotation='vertical')
+
+        for i, [d, ax] in enumerate(zip(totals_data, axs)):
+            bars = len(d.index)
+            labels = [list(d['Teacher ID'])[i] + '-' + str(list(d['Studio ID'])[i]) + ' (n=' + str(list(d.iloc[:, 3])[i]) + ')' for i in range(bars)]
+            bar = ax.bar(
+                list(range(bars)),
+                d.iloc[:,req_index],
+                .9,
+                color=[colors[tID] for tID in list(d['Teacher ID'])],
+                alpha=0.7,
+                zorder=3
+            )
+            ax.set_ylim([0, 100])
+            ax.set_xlabel(grades[i])
+            ax.tick_params(labelbottom=False)
+            ax.legend(bar, labels, bbox_to_anchor=(1, -0.1), loc='upper right', ncol=1)
+        
+        plt.savefig(path + 'pngs/' + module + "-req" + str(req_index-3) + '-analysis.png', bbox_inches='tight')
+        plt.savefig(path + module + "-req" + str(req_index-3) + '-analysis.pdf', bbox_inches='tight')
+        plt.close()
+
+   
+
 
 
 if __name__ == '__main__':

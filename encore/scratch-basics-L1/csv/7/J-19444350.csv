@@ -1,15 +1,15 @@
-ID,Error grading project,The number of steps Fred takes is changed to 100.,"Fred the user tells the user to ""Have fun!""",The wait time between costume changes is increased
-coderkid221,0,0,1,0
-coderkid224,0,0,0,0
-coderkid225,0,0,0,0
-coderkid226,0,1,1,0
-coderkid227,0,0,0,0
-coderkid228,0,0,0,0
-coderkid232,0,0,0,0
-coderkid235,0,0,1,0
-coderkid237,0,0,0,0
-coderkid239,0,0,0,0
-coderkid244,0,0,0,0
-coderkid248,0,0,1,0
-coderkid251,0,0,0,0
-coderkid255,0,1,0,0
+ID,Error grading project,"A say block is added after Neha says ""Happy Holi!"""
+coderkid221,0,0
+coderkid224,0,0
+coderkid225,0,0
+coderkid226,0,0
+coderkid227,0,0
+coderkid228,0,0
+coderkid232,0,0
+coderkid235,0,0
+coderkid237,0,0
+coderkid239,0,
+coderkid244,0,0
+coderkid248,0,0
+coderkid251,0,0
+coderkid255,0,0

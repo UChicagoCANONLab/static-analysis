@@ -1,18 +1,18 @@
-ID,Error grading project,The number of steps Fred takes is changed to 100.,"Fred the user tells the user to ""Have fun!""",The wait time between costume changes is increased
-Bass02M,0,1,1,1
-Cardoso03M,0,1,1,1
-Christon04M,0,1,0,0
-Cross05M,0,0,0,0
-Fenner07M,0,1,1,0
-Fisher08M,0,1,1,0
-Grayso09M,0,1,1,0
-Griffin10M,0,1,1,0
-Jones12M,0,0,1,0
-Nelson13M,0,1,1,0
-Reed14M,0,1,0,0
-Royal15M,0,0,0,1
-Seymour16M,0,1,1,1
-Stewart17M,0,1,1,0
-Vance19M,0,1,1,1
-Whaley20M,0,1,0,0
-holland11M,0,1,1,1
+ID,Error grading project,"A say block is added after Neha says ""Happy Holi!"""
+Bass02M,0,0
+Cardoso03M,0,0
+Christon04M,0,0
+Cross05M,0,0
+Fenner07M,0,0
+Fisher08M,0,0
+Grayso09M,0,0
+Griffin10M,0,0
+Jones12M,0,0
+Nelson13M,0,0
+Reed14M,0,0
+Royal15M,0,0
+Seymour16M,0,0
+Stewart17M,0,0
+Vance19M,0,0
+Whaley20M,0,0
+holland11M,0,0

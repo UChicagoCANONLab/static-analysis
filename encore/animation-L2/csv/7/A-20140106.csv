@@ -1,17 +1,17 @@
-ID,Error grading project,Background has an image.,There are at least 3 sprites.,The main sprite has a loop.,The main sprite moves.,The main sprite changes costume.,The main sprite has a wait block.,The main sprite does a complex dance.,Another sprite is animated.,A third sprite is animated.
-Awesome21326,0,1,1,1,0,1,1,0,1,1
-Crazy0000,0,1,0,1,0,1,1,0,0,0
-DrCrooked,0,1,1,1,1,1,1,1,1,1
-Dragonballz23,0,1,1,1,0,1,1,0,1,1
-EB1290,0,1,1,1,1,1,1,1,1,1
-OmegaLUL-123,0,1,1,1,0,1,1,0,1,1
-PatrickStar091,0,1,1,1,1,0,1,0,1,0
-RamenNoodleMan09,0,1,1,1,1,1,1,1,1,1
-Reyos21,0,1,1,1,1,1,1,1,1,1
-VlogerfromYT,0,1,1,1,1,1,1,1,0,0
-WolfyTech19,0,1,1,1,0,1,1,0,1,1
-astoria27,0,1,1,0,0,1,0,0,0,0
-fantastic18,0,1,1,1,0,1,1,0,1,0
-lukeaqua9,0,1,1,1,1,1,1,1,1,1
-myfortnitegrind,0,1,1,1,1,1,1,1,1,1
-steezykane123,0,0,1,0,0,1,1,0,0,0
+ID,Error grading project,Background has an image.,There are at least 3 sprites.,A sprite is animated in place.,A second sprite is animated in place.,A different sprite is animated while moving.
+Awesome21326,0,1,1,1,1,1
+Crazy0000,0,1,0,1,0,0
+DrCrooked,0,1,1,1,1,1
+Dragonballz23,0,1,1,1,1,0
+EB1290,0,1,1,1,0,0
+OmegaLUL-123,0,1,1,1,1,0
+PatrickStar091,0,1,1,0,0,0
+RamenNoodleMan09,0,1,1,1,1,1
+Reyos21,0,1,1,1,1,0
+VlogerfromYT,0,1,1,1,0,0
+WolfyTech19,0,1,1,1,1,0
+astoria27,0,1,1,0,0,0
+fantastic18,0,1,1,1,1,0
+lukeaqua9,0,1,1,1,1,1
+myfortnitegrind,0,1,1,1,1,1
+steezykane123,0,1,1,0,0,0
