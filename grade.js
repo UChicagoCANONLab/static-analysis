@@ -49,6 +49,9 @@ function main([project, mod, tID, grade, studioID, studioPath, verbose=null]) {
                     row[item.str] = ((item.bool) ? (1) : (0));
                 }
             } */
+            if (is(grader.stats))
+                for (let item of Object.values(grader.stats))
+                    reqsRow[item.str] = item.float;
             if (isDeepDive && is(grader.info)) {
                 deepDiveRow = {...deepDiveRow, ...grader.info};
                 deepDiveRow.blockTypes = [... deepDiveRow.blockTypes].reduce((acc, b) => acc + b + '|', '');
